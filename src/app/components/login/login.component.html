@@ -1,0 +1,31 @@
+
+<mat-card class="login-page">
+  <mat-card-header>
+      <div class="progress" *ngIf="progress">
+          <div class="indeterminate"></div>
+      </div>
+      <div id="errorMsg" *ngIf="errorMessage">
+          <span>{{errorMessage}}</span>
+      </div>
+  </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" class="login-form" (ngSubmit)="login()">
+        <mat-form-field>
+          <input matInput type="email"
+            placeholder="이메일"
+            formControlName="email">
+        </mat-form-field>
+        <mat-error *ngIf="loginForm.controls.email.invalid
+          &&  loginForm.controls.email.touched">이메일 주소를 넣어 주세요</mat-error>
+        <mat-form-field>
+          <input matInput type="password"
+             placeholder="비번"
+             formControlName="password">
+        </mat-form-field>
+        <mat-error *ngIf="loginForm.controls.password.invalid
+           && loginForm.controls.password.touched">비밀번호를 넣어 주세요</mat-error>
+        <button mat-raised-button color="primary"
+           [disabled]="loginForm.invalid">로그인</button>
+      </form>
+    </mat-card-content>
+  </mat-card>

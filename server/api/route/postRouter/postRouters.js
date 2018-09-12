@@ -1,0 +1,11 @@
+"use strict";
+exports.__esModule = true;
+var express = require("express");
+var addPost_1 = require("../../controllers/addPost");
+var AuthHelper_1 = require("../../helpers/AuthHelper");
+exports.postRouter = express.Router();
+exports.postRouter.get('/posts', AuthHelper_1["default"].VerifyToken, addPost_1["default"].GetAllPosts);
+exports.postRouter.get('/post/:id', AuthHelper_1["default"].VerifyToken, addPost_1["default"].GetPost);
+exports.postRouter.post('/add-post', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddPost);
+exports.postRouter.post('/add-like', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddLike);
+exports.postRouter.post('/add-comment', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddComment);

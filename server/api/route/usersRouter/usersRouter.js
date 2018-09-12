@@ -1,0 +1,15 @@
+"use strict";
+exports.__esModule = true;
+var express = require("express");
+var usersRouter_1 = require("../../controllers/usersRouter");
+var friendsRouter_1 = require("../../controllers/friendsRouter");
+var AuthHelper_1 = require("../../helpers/AuthHelper");
+exports.usersRouter = express.Router();
+exports.usersRouter.get('/users', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].GetAllUsers);
+exports.usersRouter.get('/user/:id', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].GetUser);
+exports.usersRouter.get('/username/:username', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].GetUserByName);
+exports.usersRouter.post('/follow-user', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].FollowUser);
+exports.usersRouter.post('/unfollow-user', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].UnFollowUser);
+exports.usersRouter.post('/mark/:id', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].MarkNotification);
+exports.usersRouter.post('/mark-all', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].MarkAllNotifications);
+// usersRouter.post('/follower-user', AuthHelper.VerifyToken, friendsController.FollowerUser);

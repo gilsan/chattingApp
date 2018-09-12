@@ -1,0 +1,85 @@
+
+ <div class="row">
+   <div class="col s12">
+     <div class="row">
+
+       <div class="card">
+         <div class="valign-wrapper" style="background-color: #64b5f6 !important">
+           <div class="col s12 imgCol">
+              <img src="http://placehold.it/50x50" alt=""  class="circle">
+           </div>
+
+           <div class="row">
+             <div class="col s10 nameCol">
+               <span>사용자명:</span>
+                <p class="isOnline">온라인:</p>
+             </div>
+           </div>
+
+         </div>
+       </div>
+     </div>
+   </div>
+   </div>
+
+   <div class="col s12 rowDiv">
+      <div class="row">
+        <div class="col s12">
+           <div class="message-wrapper">
+              <div class="left">
+                 <div class="chat-bubble left slide-left">
+                    <div class="message">좌측 메세지</div>
+                 </div>
+              </div>
+
+              <div class="right">
+                 <div class="chat-bubble right slide-right">
+                   <div class="message">우측 메제시</div>
+                 </div>
+              </div>
+
+              <div class="cf"></div>
+           </div>
+
+          <div class="left">
+             <div class="chat-bubble left slide-left">
+               <div class="message">
+                   작성중.....
+               </div>
+             </div>
+          </div>
+        </div>
+      </div>
+   </div>
+
+   <div class="col s12">
+      <div class="row">
+        <div class="card">
+          <div class="inputRow">
+            <form [formGroup]="msgForm" (ngSubmit)="SendMessage()">
+               <div class="input-field inputField col s10">
+                  <textarea name="message" formControlName="message" class="materialize-textarea inputBox"></textarea>
+               </div>
+               <div class="input-field col s1 emojiDiv">
+                     <button class="emojiBtn">
+                        이모지
+                     </button>
+                </div>
+                <div class="emoji-content-editable">
+                         <i class="emoji-toggle-button imgBtn"></i>
+                </div>
+
+                <div class="input-field col s1">
+                        <button class="suffix btn">보내기</button>
+                </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+   </div>
+
+
+
+
+
