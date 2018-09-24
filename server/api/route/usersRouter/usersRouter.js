@@ -4,6 +4,7 @@ var express = require("express");
 var usersRouter_1 = require("../../controllers/usersRouter");
 var friendsRouter_1 = require("../../controllers/friendsRouter");
 var AuthHelper_1 = require("../../helpers/AuthHelper");
+var imageRouter_1 = require("../../controllers/imageRouter");
 exports.usersRouter = express.Router();
 exports.usersRouter.get('/users', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].GetAllUsers);
 exports.usersRouter.get('/user/:id', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].GetUser);
@@ -12,4 +13,8 @@ exports.usersRouter.post('/follow-user', AuthHelper_1["default"].VerifyToken, fr
 exports.usersRouter.post('/unfollow-user', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].UnFollowUser);
 exports.usersRouter.post('/mark/:id', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].MarkNotification);
 exports.usersRouter.post('/mark-all', AuthHelper_1["default"].VerifyToken, friendsRouter_1["default"].MarkAllNotifications);
+exports.usersRouter.post('/upload-image', AuthHelper_1["default"].VerifyToken, imageRouter_1["default"].UploadImage);
+exports.usersRouter.get('/set-default-image/:imgId/:imgVersion', AuthHelper_1["default"].VerifyToken, imageRouter_1["default"].DefaultImage);
+exports.usersRouter.post('/user/view-profile', AuthHelper_1["default"].VerifyToken, imageRouter_1["default"].ProfileView);
+exports.usersRouter.post('/change-password', AuthHelper_1["default"].VerifyToken, usersRouter_1["default"].ChangePassword);
 // usersRouter.post('/follower-user', AuthHelper.VerifyToken, friendsController.FollowerUser);

@@ -1,69 +1,87 @@
 
- <div class="row">
-   <div class="col s12">
-     <div class="row">
+<div class="row">
+  <div class="col s12">
+    <div class="row">
 
-       <div class="card">
-         <div class="valign-wrapper" style="background-color: #64b5f6 !important">
-           <div class="col s12 imgCol">
-              <img src="http://placehold.it/50x50" alt=""  class="circle">
-           </div>
+      <div class="card" style="width: 100% !important">
+        <div class="valign-wrapper" style="background-color: #64b5f6 !important">
 
-           <div class="row">
-             <div class="col s10 nameCol">
-               <span>사용자명:</span>
-                <p class="isOnline">온라인:</p>
-             </div>
-           </div>
-
-         </div>
-       </div>
-     </div>
-   </div>
-   </div>
-
-   <div class="col s12 rowDiv">
-      <div class="row">
-        <div class="col s12">
-           <div class="message-wrapper">
-              <div class="left">
-                 <div class="chat-bubble left slide-left">
-                    <div class="message">좌측 메세지</div>
-                 </div>
-              </div>
-
-              <div class="right">
-                 <div class="chat-bubble right slide-right">
-                   <div class="message">우측 메제시</div>
-                 </div>
-              </div>
-
-              <div class="cf"></div>
-           </div>
-
-          <div class="left">
-             <div class="chat-bubble left slide-left">
-               <div class="message">
-                   작성중.....
-               </div>
-             </div>
+          <div class="col s12 imgCol">
+             <img *ngIf="receiverData" src="http://res.cloudinary.com/dxuimtvfm/image/upload/v{{receiverData.picVersion}}/{{receiverData.picId}}" alt=""  class="imgCircle">
           </div>
+
+          <div class="row">
+            <div class="col s10 nameCol">
+               <span>사용자명:{{receiver}}</span>
+               <p class="isOnline" *ngIf="isOnline">온라인:</p>
+            </div>
+          </div>
+
         </div>
       </div>
-   </div>
 
-   <div class="col s12">
-      <div class="row">
-        <div class="card">
-          <div class="inputRow">
-            <form [formGroup]="msgForm" (ngSubmit)="SendMessage()">
-               <div class="input-field inputField col s10">
-                  <textarea name="message" formControlName="message" class="materialize-textarea inputBox"></textarea>
+    </div>
+  </div>
+  </div> <!-- End of row -->
+
+  <div class="col s12 rowDiv" ngx-auto-scroll lock-y-offset="10" observe-attributes>
+    <div class="row">
+      <div class="col s12">
+
+               <div class="message-wrapper" *ngFor="let message of messagesArray">
+                  <div class="left" *ngIf="user.username !== receiver && user.username !== message.sendername">
+                     <div class="chat-bubble left slide-left"  style="width: 300px;">
+                        <div class="message">{{message.body}}</div>
+                     </div>
+                  </div>
+
+                  <div class="right" *ngIf="user.username === message.sendername">
+                     <div class="chat-bubble right slide-right"  style="width: 300px;">
+                       <div class="message">{{message.body}}</div>
+                     </div>
+                  </div>
+
+                  <div class="cf"></div>
                </div>
+               <div class="left" *ngIf="typing">
+                 <div class="chat-bubble left slide-left">
+                   <div class="message">
+                       {{receiver}} 입력중....
+                   </div>
+                 </div>
+               </div>
+
+       </div>
+    </div>
+  </div>   <!-- End of class col s12 rowDiv -->
+
+  <!--       하단두                  -->
+  <div class="col s12">
+      <div class="row">
+        <div class="card"   style="width: 100% !important">
+          <div class="inputRow" >
+            <form   (ngSubmit)="SendMessage()">
+               <div class="input-field inputField col s10">
+                  <textarea name="message" [(ngModel)]="message"
+                  (keypress)="IsTyping()"
+                  class="materialize-textarea inputBox"></textarea>
+               </div>
+               
                <div class="input-field col s1 emojiDiv">
-                     <button class="emojiBtn">
-                        이모지
-                     </button>
+                  <button class="emojiBtn" (click)="Toggled()">😄</button>
+                  <div class="emoji-content-editable"
+                            (emojiPickerCaretEmitter)="HandleCurrentCaret($event)"
+                            (input)="content = $event.target.textContent"
+                            [textContent]="content"
+                            contenteditable="true"></div>
+                          <i
+                            class="emoji-toggle-button imgBtn"
+                            [(emojiPickerIf)]="toggled"
+                            [emojiPickerPreserveSelection]="false"
+                            [emojiPickerDirection]="direction"
+                            [emojiPickerAutofocus]="true"
+                            (emojiPickerSelect)="HandleSelection($event)"></i>
+
                 </div>
                 <div class="emoji-content-editable">
                          <i class="emoji-toggle-button imgBtn"></i>
@@ -78,6 +96,8 @@
         </div>
       </div>
    </div>
+
+
 
 
 

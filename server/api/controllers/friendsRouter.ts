@@ -101,7 +101,7 @@ async  MarkNotification(req, res ) {
           res.status(Status.INTERNAL_SERVER_ERROR).json({msg: 'Eorror occured'});
       });
     } else {
-    //  console.log(req.params.id);
+      console.log('friendsRoute: 마크삭제 ', req.params.id, req.user._id);
         await User.update({
           _id: req.user._id,
           'notifications._id': req.params.id
@@ -111,10 +111,10 @@ async  MarkNotification(req, res ) {
            }
         })
           .then(() => {
-            res.status(Status.OK).json({msg: '삭제 표시....'});
+            res.status(Status.OK).json({msg: '마크삭제 표시....'});
           })
           .catch (err => {
-            res.status(Status.INTERNAL_SERVER_ERROR).json({msg: 'Eorror occured'});
+            res.status(Status.INTERNAL_SERVER_ERROR).json({msg: '마크삭제 에러 발생', err});
           });
     }
 
@@ -134,7 +134,7 @@ async  MarkNotification(req, res ) {
       .catch(err => {
         res
           .status(Status.INTERNAL_SERVER_ERROR)
-          .json({ message: 'Error occured' });
+          .json({ message: '전체 마크삭제 에러 발생', err });
       });
   }
 

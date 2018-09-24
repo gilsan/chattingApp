@@ -24,10 +24,11 @@ export class TokenService {
 
   GetPayload() {
     const token = this.GetToken();
-   // console.log(token);
+
     let payload;
     if (token) {
        payload = token.split('.')[1];
+
        payload = JSON.parse(window.atob(payload));
 
     }

@@ -134,23 +134,22 @@ exports["default"] = {
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 4];
-                    case 2: 
-                    //  console.log(req.params.id);
-                    return [4 /*yield*/, userModels_1["default"].update({
-                            _id: req.user._id,
-                            'notifications._id': req.params.id
-                        }, {
-                            $pull: {
-                                notifications: { _id: req.parmas.id }
-                            }
-                        })
-                            .then(function () {
-                            res.status(Status.OK).json({ msg: '삭제 표시....' });
-                        })["catch"](function (err) {
-                            res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: 'Eorror occured' });
-                        })];
+                    case 2:
+                        console.log('friendsRoute: 마크삭제 ', req.params.id, req.user._id);
+                        return [4 /*yield*/, userModels_1["default"].update({
+                                _id: req.user._id,
+                                'notifications._id': req.params.id
+                            }, {
+                                $pull: {
+                                    notifications: { _id: req.parmas.id }
+                                }
+                            })
+                                .then(function () {
+                                res.status(Status.OK).json({ msg: '마크삭제 표시....' });
+                            })["catch"](function (err) {
+                                res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: '마크삭제 에러 발생', err: err });
+                            })];
                     case 3:
-                        //  console.log(req.params.id);
                         _a.sent();
                         _a.label = 4;
                     case 4: return [2 /*return*/];
@@ -170,7 +169,7 @@ exports["default"] = {
                         })["catch"](function (err) {
                             res
                                 .status(Status.INTERNAL_SERVER_ERROR)
-                                .json({ message: 'Error occured' });
+                                .json({ message: '전체 마크삭제 에러 발생', err: err });
                         })];
                     case 1:
                         _a.sent();

@@ -44,6 +44,20 @@ export class UserService {
     return  this.http.post(`${BASEURL}/follower-user`, { userFollowed  } );
   }
 
+  AddImage(image): Observable<any> {
+    return  this.http.post(`${BASEURL}/upload-image`, { image } );
+  }
 
+  SetDefaultImage(imageId, imageVersion): Observable<any> {
+    return  this.http.get(`${BASEURL}/set-default-image/${imageId}/${imageVersion} ` );
+  }
+
+  ProfileNotifications(id): Observable<any> {
+    return  this.http.post(`${BASEURL}/user/view-profile` , { id } );
+  }
+
+  ChangePassword (body): Observable<any> {
+    return  this.http.post(`${BASEURL}/change-password` , { body } );
+  }
 
 }

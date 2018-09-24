@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { TokenService } from '../../services/token.service';
 import * as _ from 'lodash';
 import * as io from 'socket.io-client';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-people',
@@ -15,9 +16,11 @@ export class PeopleComponent implements OnInit  {
   users = [];
   userArr = [];
   socket: any;
+  online_users = [];
   constructor(
     private usersService: UserService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private router: Router
   ) {
     this.socket = io('http://localhost:3000');
    }
@@ -27,7 +30,7 @@ export class PeopleComponent implements OnInit  {
     this.loggedUsername = this.tokenService.GetPayload();
     this.GetUsers();
     this.GetUser();
-    this.GetUserByName();
+    // this.GetUserByName();
 
     this.socket.on('refreshPage', () => {
       this.GetUsers();
@@ -40,6 +43,7 @@ export class PeopleComponent implements OnInit  {
     this.usersService.GetAllUsers()
       .subscribe( (data) => {
         _.remove(data.result, {username:  this.loggedUsername.username} );
+
         this.users = data.result;
       });
   }
@@ -72,6 +76,28 @@ export class PeopleComponent implements OnInit  {
       return true;
     }
     return false;
+  }
+
+  online(event) {
+     this.online_users = event;
+  }
+
+  CheckIfOnline(name) {
+    const result = _.indexOf(this.online_users, name);
+    if (result > -1) {
+      return true;
+    } else { return false; }
+  }
+
+  viewUser(user) {
+   // console.log(user.loggedUsername);
+    this.router.navigate([user.username]);
+    if (this.loggedUsername.username !== user.username) {
+      this.usersService.ProfileNotifications(user._id)
+        .subscribe( (data) => {
+                  this.socket.emit('refresh', {});
+        }, err => console.log(err));
+    }
   }
 
 }

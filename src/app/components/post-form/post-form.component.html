@@ -2,7 +2,7 @@
   <div class="col s12 m12 l10">
       <div class="card postDiv">
         <div class="card-content">
-            <form class="col s12" [formGroup]="postForm" novalidate (ngSubmit)="submitPost()">
+            <form class="col s12" [formGroup]="postForm" novalidate (ngSubmit)="SubmitPost()">
                 <div class="formDiv">
                   <div class="input-field col s12">
                     <textarea id="textarea1" class="materialize-textarea" formControlName="post"></textarea>
@@ -12,7 +12,8 @@
                               <div class="btn">
                                 <i class="material-icons">image</i>
                                   <span>이미지</span>
-                                  <input type="file">
+                                  <input type="file"  ng2FileSelect [uploader]="uploader"
+                                  (onFileSelected)="OnFileSelected($event)">
                                 </div>
                                 <div class="file-path-wrapper">
                                   <input class="file-path validate" type="text">

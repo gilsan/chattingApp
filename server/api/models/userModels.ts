@@ -1,6 +1,6 @@
 
 import * as mongoose from 'mongoose';
-
+import * as bcrypt from 'bcryptjs';
 
   const Schema = mongoose.Schema;
   const userSchema = new Schema({
@@ -32,12 +32,23 @@ import * as mongoose from 'mongoose';
     ],
      chatList: [
        {
-         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+         receiverId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
          msgId: { type: mongoose.Schema.Types.ObjectId, ref: 'Message'},
        }
-     ]
-
-
+     ],
+    picVersion: { type: String, default: '1537019928'},
+    picId: { type: String, default: 'avatar-ts-buzz.png'},
+    images: [
+      {
+        imgId:  { type: String, default: ''},
+        imgVersion:  { type: String, default: ''}
+      }
+    ]
   });
+
+  userSchema.statics.EncrytPassword = async (password) => {
+         const hash = await bcrypt.hash(password, 10);
+         return hash;
+  };
 
   export default mongoose.model('User', userSchema);

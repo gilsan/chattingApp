@@ -12,6 +12,7 @@ import {  CookieService } from 'ngx-cookie-service';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,6 +26,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     AuthRoutingModule,
     StreamsModule,
     StreamsRoutingModule,
+
 
   ],
   providers: [

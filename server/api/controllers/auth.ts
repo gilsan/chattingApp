@@ -31,7 +31,7 @@ export default {
          .then((user) => {
 
            const token = jwt.sign({data: user}, Url.secret, {
-              expiresIn: '1d'
+              expiresIn: '60'
            });
            res.cookie('auth', token);
           return res.status(Status.CREATED).json({msg: user, token: token});
@@ -60,7 +60,13 @@ async  login(req, res) {
        if (!matched) {
           return res.status(Status.UNAUTHORIZED).json({msg: '이메일주소 또는 암호가 틀립니다.' });
        }
-       const token = jwt.sign({data: user}, Url.secret, {
+        const user_info = {
+                 _id: user._id,
+                 username: user.username,
+                 email: user.email
+          };
+
+       const token = jwt.sign({data: user_info}, Url.secret, {
         expiresIn: '1d'
      });
         res.cookie('auth', token);

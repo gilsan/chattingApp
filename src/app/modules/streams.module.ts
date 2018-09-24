@@ -28,18 +28,23 @@ import { ChatComponent } from '../components/chat/chat.component';
 import { MessageComponent } from '../components/message/message.component';
 import { MessageServiceService } from '../services/message-service.service';
 
-
+import {NgxAutoScrollModule} from 'ngx-auto-scroll';
+import { EmojiPickerModule } from 'ng2-emoji-picker';
+import { FileUploadModule} from 'ng2-file-upload';
+import { ViewUserComponent } from '../components/view-user/view-user.component';
+import { ChangepasswordComponent } from '../components/changepassword/changepassword.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
+    FileUploadModule,
+    FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    LayoutModule.forRoot(adminLteConf),
-    LoadingPageModule, MaterialBarModule,
-    DropdownModule, BoxModule, TabsModule,
+    NgxAutoScrollModule,
+    EmojiPickerModule.forRoot()
 
   ],
   declarations: [
@@ -57,6 +62,8 @@ import { MessageServiceService } from '../services/message-service.service';
     TopStreamsComponent,
     ChatComponent,
     MessageComponent,
+    ViewUserComponent,
+    ChangepasswordComponent,
 
   ],
   exports: [

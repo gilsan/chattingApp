@@ -1,8 +1,15 @@
 import * as Joi from 'joi';
 import Post from '../models/postModels';
 import User from '../models/userModels';
-
+import * as cloudinary from 'cloudinary';
 import * as Status from 'http-status-codes';
+import * as moment from 'moment';
+
+cloudinary.config({
+  cloud_name: 'dxuimtvfm',
+  api_key: '473843396736467',
+  api_secret: 'jYqQINTuvKqDgfEEEbZuzeseYuE'
+});
 
 export default {
   AddPost(req, res) {
@@ -11,7 +18,12 @@ export default {
       post: Joi.string().required(),
     });
 
-    const{ error } = Joi.validate(req.body, schema);
+
+    const post_body = {
+      post: req.body.post
+    };
+
+    const{ error } = Joi.validate(post_body, schema);
     if (error && error.details ) {
       return res.status(Status.BAD_REQUEST).json({msg: error.details});
     }
@@ -23,6 +35,10 @@ export default {
       created: new Date()
     };
 
+
+
+   if (req.body.post && !req.body.image) {
+    // console.log('req.body.post && !req.body.image ');
     Post.create(body).then( async (post) => {
       await User.update(
         {
@@ -37,25 +53,70 @@ export default {
           }
         }
       );
-      res.status(200).json({msg: post});
+      res.status(200).json({msg: post, sender: '그림 없는 경우'});
     }).catch( err => {
       res.status(Status.INTERNAL_SERVER_ERROR).json({msg: '서버 내부에러'});
     });
+  }
+
+    if (req.body.post && req.body.image) {
+
+      cloudinary.uploader.upload(req.body.image, async (result) => {
+          //  console.log(result);
+                 const reqBody = {
+                   user: req.user._id,
+                   username: req.user.username,
+                   post: req.body.post,
+                   imgId: result.public_id,
+                   imgVersion: result.version,
+                   created: new Date()
+
+                 };
+
+                  Post.create(reqBody)
+                  .then( async (post) => {
+                     await User.update(
+                       {
+                          _id: req.user._id
+                       },
+                       {
+                          $push: {
+                             posts: {
+                                postId: post._id,
+                                post: req.body.post,
+                                created: new Date()
+                             }
+                          }
+                       }
+                     );
+                     res.status(200).json({msg: post, posts: '사진있는 경우'});
+                  })
+                  .catch( (err) => res.status(Status.INTERNAL_SERVER_ERROR).json({msg: '서버 내부에러'}) );
+       });
+    }
+
   },
 
   async GetAllPosts(req, res) {
      try {
+
+       const today = moment().startOf('day');
+       const tomorrow = moment().add(1, 'days');
+
       const posts = await Post.find({})
          .populate('user')
          .sort({created: -1});
-
-         const top = await Post.find({totalLikes: {$gte: 2}})
+        // console.log('GetAllPosts: ', posts );
+         const top = await Post.find({
+           totalLikes: {$gte: 2},
+         // created: { $gte: today.toDate(), $lt: tomorrow.toDate()}
+         })
          .populate('user')
          .sort({created: -1});
-
+         console.log('GetAllPosts: ',  top);
       res.status(Status.OK).json({msg: 'GetAllPosts 전체' , posts, top});
      } catch (err) {
-      res.status(Status.INTERNAL_SERVER_ERROR).json({msg: '서버 내부에러'});
+      res.status(Status.INTERNAL_SERVER_ERROR).json({msg: 'GetAllPosts 서버 내부에러' + err});
      }
   },
 
@@ -119,8 +180,62 @@ export default {
 
   },
 
-   PostAdd(req, res) {
-     console.log(req.body);
+     PostAdd(req, res) {
+      console.log('PostEdit: ', req.body);
+  },
+
+  PostEdit(req, res) {
+   const schema = Joi.object().keys({
+       post: Joi.string().required(),
+       id: Joi.string().optional()
+   });
+
+   const { error } = Joi.validate(req.body.bldy, schema);
+   if (error && error.details ) {
+     return res.status(Status.INTERNAL_SERVER_ERROR).json({msg: error.details });
+   }
+
+   const body = {
+       post: req.body.body.post,
+       created: new Date()
+   };
+
+   Post.findOneAndUpdate({_id: req.body.body.id}, body, { new: true})
+     .then( post => {
+      res.status(Status.OK).json({msg: '포트스 갱신 완료....' , post});
+     })
+     .catch( err => {
+      return res.status(Status.INTERNAL_SERVER_ERROR).json({msg: err  });
+     });
+
+  },
+
+ async PostDelete(req, res) {
+   try {
+    const id = req.params.id;
+    const result = await Post.findByIdAndRemove(id);
+    console.log('PostDelet: ', result);
+    if (!result) {
+      return res.status(Status.NOT_FOUND).json({msg: '없는 아이템 입니다.'  });
+    } else {
+        await User.update({_id: req.user._id},
+            { $pull : {
+                posts: {
+                  postId: result._id
+                }
+               }
+           }
+          );
+          return res.status(Status.OK).json({msg: '포트스 삭제 완료....' });
+    }
+
+
+   } catch (err) {
+    return res.status(Status.INTERNAL_SERVER_ERROR).json({msg: err  });
+   }
+
+
+
   }
 };
 

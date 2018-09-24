@@ -9,3 +9,5 @@ exports.postRouter.get('/post/:id', AuthHelper_1["default"].VerifyToken, addPost
 exports.postRouter.post('/add-post', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddPost);
 exports.postRouter.post('/add-like', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddLike);
 exports.postRouter.post('/add-comment', AuthHelper_1["default"].VerifyToken, addPost_1["default"].AddComment);
+exports.postRouter.put('/post-edit', AuthHelper_1["default"].VerifyToken, addPost_1["default"].PostEdit);
+exports.postRouter["delete"]('/post-delete/:id', AuthHelper_1["default"].VerifyToken, addPost_1["default"].PostDelete);

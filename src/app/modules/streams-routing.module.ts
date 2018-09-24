@@ -9,6 +9,8 @@ import { FollowersComponent } from '../components/followers/followers.component'
 import { NotificationComponent } from '../components/notification/notification.component';
 import { ImagesComponent } from '../components/images/images.component';
 import { ChatComponent } from '../components/chat/chat.component';
+import { ViewUserComponent } from '../components/view-user/view-user.component';
+import { ChangepasswordComponent } from '../components/changepassword/changepassword.component';
 
 const routes: Routes = [
 
@@ -35,6 +37,16 @@ const routes: Routes = [
  },
  {  path: 'chat/:name', component: ChatComponent,
     canActivate: [ AuthGuard ]
+ },
+ {  path: 'account/password', component: ChangepasswordComponent,
+    canActivate: [ AuthGuard ]
+ },
+ {  path: ':name', component: ViewUserComponent,
+    canActivate: [ AuthGuard ]
+ },
+ {
+    path: '**',
+    redirectTo: 'streams'
  }
 ];
 

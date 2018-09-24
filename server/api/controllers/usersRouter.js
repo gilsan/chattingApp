@@ -37,6 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var Status = require("http-status-codes");
 var userModels_1 = require("../models/userModels");
+var Joi = require("joi");
+var bcrypt = require("bcryptjs");
 exports["default"] = {
     GetAllUsers: function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
@@ -46,9 +48,12 @@ exports["default"] = {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, userModels_1["default"].find({})
-                                .populate('post.postId')
+                                .populate('posts.postId')
                                 .populate('following.userFollowed')
                                 .populate('followers.follower')
+                                .populate('chatList.receiverId')
+                                .populate('chatList.msgId')
+                                .populate('notifications.senderid')
                                 .then(function (result) {
                                 res.status(Status.OK).json({ msg: '사용자 내역', result: result });
                             })["catch"](function (err) {
@@ -72,25 +77,25 @@ exports["default"] = {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('GetUser:  ', req.params.id);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, userModels_1["default"].findOne({ _id: req.params.id })
-                                .populate('post.postId')
+                                .populate('posts.postId')
                                 .populate('following.userFollowed')
                                 .populate('followers.follower')
+                                .populate('chatList.receiverId')
+                                .populate('chatList.msgId')
+                                .populate('notifications.senderid')
                                 .then(function (user) {
                                 res.status(Status.OK).json({ msg: '아이디로 사용자 정보 찿기', user: user });
                             })];
-                    case 2:
+                    case 1:
                         _a.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
+                        return [3 /*break*/, 3];
+                    case 2:
                         err_2 = _a.sent();
                         res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: '서버 내부에러' });
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -101,25 +106,75 @@ exports["default"] = {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log(req.params);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
+                        _a.trys.push([0, 2, , 3]);
                         return [4 /*yield*/, userModels_1["default"].findOne({ username: req.params.username })
                                 .populate('post.postId')
                                 .populate('following.userFollowed')
                                 .populate('followers.follower')
+                                .populate('chatList.receiverId')
+                                .populate('chatList.msgId')
+                                .populate('notifications.senderid')
                                 .then(function (user) {
                                 res.status(Status.OK).json({ msg: '이름으로 사용자 정보 찿기', user: user });
                             })];
-                    case 2:
+                    case 1:
                         _a.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
+                        return [3 /*break*/, 3];
+                    case 2:
                         err_3 = _a.sent();
                         res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: '서버 내부에러', err: err_3 });
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    },
+    ChangePassword: function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var schema, _a, error, value, user;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        schema = Joi.object().keys({
+                            cPassword: Joi.string().required(),
+                            newPassword: Joi.string().required(),
+                            confirmPassword: Joi.string().optional()
+                        });
+                        _a = Joi.validate(req.body.body, schema), error = _a.error, value = _a.value;
+                        if (error && error.details) {
+                            res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: error.details });
+                        }
+                        return [4 /*yield*/, userModels_1["default"].findOne({ _id: req.user._id })];
+                    case 1:
+                        user = _b.sent();
+                        return [2 /*return*/, bcrypt.compare(value.cPassword, user.password)
+                                .then(function (result) { return __awaiter(_this, void 0, void 0, function () {
+                                var newpassword;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!result) {
+                                                return [2 /*return*/, res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: '현재번호가 맞지 않습니다.' })];
+                                            }
+                                            return [4 /*yield*/, bcrypt.hash(req.body.body.newPassword, 10)];
+                                        case 1:
+                                            newpassword = _a.sent();
+                                            return [4 /*yield*/, user.update({
+                                                    _id: req.user._id
+                                                }, {
+                                                    password: newpassword
+                                                }).then(function () {
+                                                    res.status(Status.OK).json({ msg: '번호 변경 ', result: result });
+                                                })["catch"](function (err) {
+                                                    res.status(Status.INTERNAL_SERVER_ERROR).json({ msg: '변경 변경에러' });
+                                                })];
+                                        case 2:
+                                            _a.sent();
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); })];
                 }
             });
         });

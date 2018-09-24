@@ -55,6 +55,7 @@ exports["default"] = {
                 key = secrete_1.Url.secret;
                 return [2 /*return*/, jwt.verify(token, key, function (err, decoded) {
                         if (err) {
+                            console.log('사용 만료: ', err);
                             if (err.expiredAt < new Date()) {
                                 return res.status(Status.INTERNAL_SERVER_ERROR).json({
                                     msg: '토큰이 사용 만료 되었습니다.',

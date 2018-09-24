@@ -19,6 +19,7 @@ export default {
     const key = Url.secret;
     return jwt.verify(token, key, (err, decoded) => {
        if (err) {
+         console.log('사용 만료: ', err);
          if (err.expiredAt < new Date() ) {
            return res.status(Status.INTERNAL_SERVER_ERROR).json({
              msg: '토큰이 사용 만료 되었습니다.',

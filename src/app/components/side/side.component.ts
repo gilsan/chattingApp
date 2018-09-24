@@ -34,6 +34,7 @@ export class SideComponent implements OnInit {
      .subscribe( (data) => {
 
          this.userData = data.user;
+         console.log(this.userData);
      });
   }
 

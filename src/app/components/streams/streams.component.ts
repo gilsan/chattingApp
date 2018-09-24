@@ -22,6 +22,7 @@ export class StreamsComponent implements OnInit {
   ngOnInit() {
     this.streamsTab = true;
     this.token = this.tokenService.GetToken();
+
     const tabs = document.querySelector('.tabs');
     M.Tabs.init(tabs, {});
   }

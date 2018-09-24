@@ -5,3 +5,6 @@ var message_1 = require("../../controllers/message");
 var AuthHelper_1 = require("../../helpers/AuthHelper");
 exports.messageRouter = express.Router();
 exports.messageRouter.post('/chat-message/:senderId/:receiverId', AuthHelper_1["default"].VerifyToken, message_1["default"].SendMessage);
+exports.messageRouter.get('/chat-message/:senderId/:receiverId', AuthHelper_1["default"].VerifyToken, message_1["default"].GetAllMessage);
+exports.messageRouter.get('/receiver-message/:sender/:receiver', AuthHelper_1["default"].VerifyToken, message_1["default"].MarkReceiverMessage);
+exports.messageRouter.get('/mark-all-messages', AuthHelper_1["default"].VerifyToken, message_1["default"].MarkAllMessages);

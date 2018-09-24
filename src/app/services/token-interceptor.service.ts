@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { TokenService } from './token.service';
+
 import { Router } from '@angular/router';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'

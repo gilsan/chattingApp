@@ -6,16 +6,21 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, AfterViewInit {
-  toolbarElement: any;
-  constructor() { }
+  tabElement: any;
+  online_users = [];
+
+  constructor() {}
 
   ngOnInit() {
-
-    this.toolbarElement = document.querySelector('.nav-content');
+    this.tabElement = document.querySelector('.nav-content');
   }
 
   ngAfterViewInit() {
-    this.toolbarElement.style.display = 'none';
+    this.tabElement.style.display = 'none';
   }
 
+  online(event) {
+    this.online_users = event;
+  }
 }
+

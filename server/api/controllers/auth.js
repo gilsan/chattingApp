@@ -73,7 +73,7 @@ exports["default"] = {
                         userModels_1["default"].create(body)
                             .then(function (user) {
                             var token = jwt.sign({ data: user }, secrete_1.Url.secret, {
-                                expiresIn: '1d'
+                                expiresIn: '60'
                             });
                             res.cookie('auth', token);
                             return res.status(Status.CREATED).json({ msg: user, token: token });
@@ -91,7 +91,7 @@ exports["default"] = {
     },
     login: function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, error, value, user, matched, token, err_2;
+            var _a, error, value, user, matched, user_info, token, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -110,7 +110,12 @@ exports["default"] = {
                         if (!matched) {
                             return [2 /*return*/, res.status(Status.UNAUTHORIZED).json({ msg: '이메일주소 또는 암호가 틀립니다.' })];
                         }
-                        token = jwt.sign({ data: user }, secrete_1.Url.secret, {
+                        user_info = {
+                            _id: user._id,
+                            username: user.username,
+                            email: user.email
+                        };
+                        token = jwt.sign({ data: user_info }, secrete_1.Url.secret, {
                             expiresIn: '1d'
                         });
                         res.cookie('auth', token);

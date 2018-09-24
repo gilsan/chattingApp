@@ -9,3 +9,5 @@ postRouter.get('/post/:id', AuthHelper.VerifyToken, postController.GetPost);
 postRouter.post('/add-post', AuthHelper.VerifyToken, postController.AddPost);
 postRouter.post('/add-like', AuthHelper.VerifyToken, postController.AddLike);
 postRouter.post('/add-comment', AuthHelper.VerifyToken, postController.AddComment);
+postRouter.put('/post-edit', AuthHelper.VerifyToken, postController.PostEdit);
+postRouter.delete('/post-delete/:id', AuthHelper.VerifyToken, postController.PostDelete);
